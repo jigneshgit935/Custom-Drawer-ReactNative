@@ -1,56 +1,47 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { SplashScreen, Stack } from 'expo-router';
-import { useEffect } from 'react';
-import { useColorScheme } from 'react-native';
-
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router';
-
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
+import 'react-native-gesture-handler';
+import { Drawer } from 'expo-router/drawer';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Ionicons } from '@expo/vector-icons';
+const DrawerLayout = () => {
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Drawer>
+        <Drawer.Screen
+          name="index"
+          options={{
+            drawerLabel: 'Home',
+            headerTitle: 'Home',
+            headerTitleAlign: 'center',
+            drawerIcon: ({ size, color }) => (
+              <Ionicons name="home-outline" size={size} color={color} />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="news"
+          options={{
+            drawerLabel: 'News',
+            headerTitle: 'Newsfeed',
+            headerTitleAlign: 'center',
+            drawerIcon: ({ size, color }) => (
+              <Ionicons name="newspaper-outline" size={size} color={color} />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="profile"
+          options={{
+            drawerLabel: 'Profile',
+            headerTitle: 'My Profile',
+            headerTitleAlign: 'center',
+            drawerIcon: ({ size, color }) => (
+              <Ionicons name="person-outline" size={size} color={color} />
+            ),
+          }}
+        />
+      </Drawer>
+    </GestureHandlerRootView>
+  );
 };
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-    ...FontAwesome.font,
-  });
-
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
-  useEffect(() => {
-    if (error) throw error;
-  }, [error]);
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
-  return <RootLayoutNav />;
-}
-
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
-  );
-}
+export default DrawerLayout;
